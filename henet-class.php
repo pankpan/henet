@@ -73,6 +73,25 @@ class HENET {
             return false;
         }
     }
+
+    public function modify_record($zone, $name, $type, $content, $ttl=3600) {
+        $zoneid=$this->name_to_zoneid[$zone];
+        if ($zoneid) {
+            $record=$name.'.'.$zone;
+            $recordid=$this->get_recordid($record, $type);
+            if ($recordid) {
+                echo "recordid $recordid\n";
+            } else {
+                echo "recordid not found\n";
+            }
+            //$post_data="menu=edit_zone&hosted_dns_zoneid=$zoneid&hosted_dns_recordid=$recordid&hosted_dns_editzone=1&hosted_dns_delrecord=1&hosted_dns_delconfirm=delete";
+            $post_data="account=&menu=edit_zone&Type=$type&hosted_dns_zoneid=$zoneid&hosted_dns_recordid=$recordid&hosted_dns_editzone=1&Priority=-&Name=$name&Content=$content&TTL=$ttl&hosted_dns_editrecord=Update";
+            $this->curl_request(self::URL.'index.cgi', 'POST', $post_data, self::COOKIE_FILE);
+        } else {
+            echo "zoneid not found\n";
+            return false;
+        }
+    }
     
     public function get_record_type_to_recordid($zone) {
         $zoneid=$this->name_to_zoneid[$zone];
