@@ -84,7 +84,6 @@ class HENET {
             } else {
                 echo "recordid not found\n";
             }
-            //$post_data="menu=edit_zone&hosted_dns_zoneid=$zoneid&hosted_dns_recordid=$recordid&hosted_dns_editzone=1&hosted_dns_delrecord=1&hosted_dns_delconfirm=delete";
             $post_data="account=&menu=edit_zone&Type=$type&hosted_dns_zoneid=$zoneid&hosted_dns_recordid=$recordid&hosted_dns_editzone=1&Priority=-&Name=$name&Content=$content&TTL=$ttl&hosted_dns_editrecord=Update";
             $this->curl_request(self::URL.'index.cgi', 'POST', $post_data, self::COOKIE_FILE);
         } else {
