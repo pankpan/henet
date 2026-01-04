@@ -13,4 +13,4 @@ PHP class for HE.net DNS management
     $hn->delete_record('yourdomain.com', 'abc', 'A');
 
     // modify abc.yourdomain.com A record with TTL 600
-    $hn->delete_record('yourdomain.com', 'abc', 'A', '10.10.10.11', 600);
+    $hn->modify_record('yourdomain.com', 'abc', 'A', '10.10.10.11', 600);
