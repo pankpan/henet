@@ -4,6 +4,7 @@ class HENET {
     const USERNAME = '';
     const PASSWORD = '';
     const COOKIE_FILE = '/dev/shm/henet-cookiejar.txt';
+    const DEBUG = false;
     const DEBUG_LOG = '/dev/shm/henet-debug.log';
     
     public function __construct() {
@@ -45,7 +46,9 @@ class HENET {
         }
         $response = curl_exec($ch);
         curl_close($ch);
-        file_put_contents(self::DEBUG_LOG, "$url,$method,$data,$response\n", FILE_APPEND); // for debug
+        if (self::DEBUG) {
+            file_put_contents(self::DEBUG_LOG, date("Y-m-d H:i:s").",$url,$method,$data,$response\n", FILE_APPEND); // for debug
+        }
         return $response;
     }
 
