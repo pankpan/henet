@@ -4,18 +4,22 @@ class HENET {
     const USERNAME = '';
     const PASSWORD = '';
     const COOKIE_FILE = '/dev/shm/henet-cookiejar.txt';
-            
+    const DEBUG_LOG = '/dev/shm/henet-debug.log';
+    
     public function __construct() {
-        if (file_exists(self::COOKIE_FILE) && (time()-filemtime(self::COOKIE_FILE))<(3600*12)) // cookie valid for 12H
+        if (file_exists(self::COOKIE_FILE) && filesize(self::COOKIE_FILE)>0 && (time()-filemtime(self::COOKIE_FILE))<(3600*12)) // cookie valid for 12H
             $login_process=false; // login credential is valid, no need to login
         else
             $login_process=true;
         if ($login_process) {
             $this->curl_request(self::URL, 'GET', '', self::COOKIE_FILE); // get initial cookie
-            $post_data = 'email='.self::USERNAME.'&pass='.self::PASSWORD; // login
+            $post_data = 'email='.self::USERNAME.'&pass='.self::PASSWORD.'&submit=Login%21'; // login
             $response = $this->curl_request(self::URL, 'POST', $post_data, self::COOKIE_FILE);
         } else {
             $response = $this->curl_request(self::URL, 'GET', '', self::COOKIE_FILE);
+        }
+        if (!str_contains($response, 'editzone')) {
+            exit('login failed');
         }
         preg_match_all('/name=.([0-9a-z\.-]+). value=.([0-9]+). src=.*delete.png/', $response, $match);
         $n=count($match[0]);
@@ -41,6 +45,7 @@ class HENET {
         }
         $response = curl_exec($ch);
         curl_close($ch);
+        file_put_contents(self::DEBUG_LOG, "$url,$method,$data,$response\n", FILE_APPEND); // for debug
         return $response;
     }
 
